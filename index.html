@@ -14,67 +14,58 @@ body {
 body {
     display: table;
     width: 100%;
-    background: #eee;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    overflow-x: hidden; /* Don't ever let it scroll horizontally */
 }
 
+/* Purpose: disable text selection on everything */
 body {
     cursor: default;
-    -webkit-touch-callout: none; /* iOS Safari */
-      -webkit-user-select: none; /* Safari */
-       -khtml-user-select: none; /* Konqueror HTML */
-         -moz-user-select: none; /* Firefox */
-          -ms-user-select: none; /* IE/Edge */
-              user-select: none; /* Non-prefixed version, currently
-                                    supported by Chrome and Opera */
+    user-select: none;
 }
 
-#wrapper {
-    display: table-row;
-    height: 100%;
+/* Purpose: set universal background color */
+body,
+div {
+    background-color: #eee;
 }
 
-#left,
-#right {
-    display: table-cell;
-    padding: 0;
-    vertical-align: middle;
-}
-
-#left {
-    width: 20%;
-    min-width: 15em;
-    padding: 1em;
-}
-
-#scroll {
-    height: 100%;
+div {
+    box-sizing: border-box;
     height: 100vh;
-    overflow-y: scroll;
+    max-width: 22.5%;
+    overflow: hidden;
+    padding: 1em;
+    padding-top: 25%; /* Purpose: vertically center the contents */
+    position: fixed;
+    width: 22.5%;
 }
 
 label {
-    white-space: nowrap;
     display: block;
+    font-size: 1.4rem;
     padding-bottom: 0.25em;
+    white-space: nowrap;
 }
 
 input {
-    color: #000;
-    width: 100%;
-    font-size: 2rem;
-    text-align: right;
+    background-color: #fff;
     border-radius: 4px;
     border-width: 1px;
+    color: #000;
+    font-size: 2rem;
     margin-bottom: 0.5em;
-    background-color: #fff;
+    text-align: right;
+    width: 100%;
 }
 
 table {
-    width: 100%;
-    border-spacing: 1px;
-    border-collapse: separate;
     background: #ddd;
+    border-collapse: separate;
+    border-spacing: 1px;
+    height: 100vh;
+    margin-left: 22.5%;
+    width: 77.5%;
 }
 
 table tr:nth-child(odd) {
@@ -98,181 +89,179 @@ table td {
 
 </style>
 
-<div id="wrapper">
-    <div id="left">
-        <label for="pricePerShare">Price per Share</label>
-        <input id="pricePerShare" type="number" min=".01" max="9000" step="0.01" placeholder="Close Price" value="2.0" />
+<div>
+    <label for="pricePerShare">Price per Share</label>
+    <input id="pricePerShare" type="number" min=".01" max="9000" step="0.01" placeholder="Close Price" value="2.0" />
 
-        <label for="sharesNum">Number of Shares</label>
-        <input id="sharesNum" type="number" min="0" max="900000" step="100" placeholder="Pos. size" value="0" />
+    <label for="sharesNum">Number of Shares</label>
+    <input id="sharesNum" type="number" min="0" max="900000" step="100" placeholder="Pos. size" value="0" />
 
-        <label for="tradeCost">Cost of Trade</label>
-        <input id="tradeCost" type="number" min="0" max="90000" step="100" placeholder="Cost" value="2000" />
-    </div>
-    <div id="right">
-        <div id="scroll"><table><tbody></tbody></table></div>
-    </div>
+    <label for="tradeCost">Cost of Trade</label>
+    <input id="tradeCost" type="number" min="0" max="90000" step="100" placeholder="Cost" value="2000" />
 </div>
+<table><tbody></tbody></table>
 
 <script>
 
-var precision = 2
+var precision = 2;
 
 function range(start, step, end) {
-    var a = [ start ]
+    var a = [start];
 
-    for (var i = 1; start < end; i++)
-        if (start < 0 && start >= -5)
-            a[i] = ++start
-        else
-            a[i] = (start += step)
+    for (var i = 1; start < end; i++) {
+        if (start < 0 && start >= -5) {
+            a[i] = start++;
+        } else {
+            a[i] = (start += step);
+        }
+    }
 
-    return a
+    return a;
 }
 
 function empty(DOMelement) {
-    while (DOMelement.firstChild) DOMelement.removeChild(DOMelement.firstChild)
+    while (DOMelement.firstChild) DOMelement.removeChild(DOMelement.firstChild);
 }
 
 function scrollToBottom(element) {
-   element.scrollTop = element.scrollHeight - element.clientHeight
+   element.scrollTop = element.scrollHeight - element.clientHeight;
 }
 
 function formatPPSField(percentage, pricePerShareValue) {
-    var price = percentage * pricePerShareValue / 100 + pricePerShareValue
+    var price = percentage * pricePerShareValue / 100 + pricePerShareValue;
 
-    return price.toFixed(precision)
+    return price.toFixed(precision);
 }
 
 function formatGainField(percentage, pricePerShareValue) {
-    var gain = (percentage * pricePerShareValue / 100 + pricePerShareValue) / pricePerShareValue
+    var gain = (percentage * pricePerShareValue / 100 + pricePerShareValue) / pricePerShareValue;
 
-    return isNaN(gain) ? '∞' : ('×' + gain.toFixed(2))
+    return isNaN(gain) ? '∞' : ('×' + gain.toFixed(2));
 }
 
 function formatEarningsField(neg, percentage, pricePerShareValue, sharesNumValue) {
-    var gain = percentage * pricePerShareValue / 100 * sharesNumValue
+    var gain = percentage * pricePerShareValue / 100 * sharesNumValue;
 
-    return ((neg) ? '(' : ' ') + '$' + Math.abs(gain|0) + ((neg) ? ')' : ' ')
+    return ((neg) ? '(' : ' ') + '$' + Math.abs(gain|0) + ((neg) ? ')' : ' ');
 }
 
 function formatResultField(neg, percentage, pricePerShareValue, sharesNumValue, tradeCostValue) {
-    var gain = percentage * pricePerShareValue / 100 * sharesNumValue
+    var gain = percentage * pricePerShareValue / 100 * sharesNumValue;
 
-    return '$' + ((gain|0) + tradeCostValue)
+    return '$' + ((gain|0) + tradeCostValue);
 }
 
 function update(noScroll) {
-    var pricePerShareValue = +DOMpricePerShare.value
-    var sharesNumValue = +DOMsharesNum.value
-    var tradeCostValue = +DOMtradeCost.value
+    var pricePerShareValue = +DOMpricePerShare.value;
+    var sharesNumValue = +DOMsharesNum.value;
+    var tradeCostValue = +DOMtradeCost.value;
 
-    empty(DOMcurrSpread)
+    empty(DOMcurrSpread);
 
-    var frag = document.createDocumentFragment()
+    var frag = document.createDocumentFragment();
 
     for (var i = 0, ilen = percentages.length; i < ilen; i++) {
         //if (percentages[i] == 0) continue
 
-        var neg = percentages[i] < 0
-        var pos = percentages[i] > 0
+        var neg = percentages[i] < 0;
+        var pos = percentages[i] > 0;
 
         var trNode  = document.createElement('tr')
           , tdNode1 = document.createElement('td')
           , tdNode2 = document.createElement('td')
           , tdNode3 = document.createElement('td')
-          , tdNode4 = document.createElement('td')
+          , tdNode4 = document.createElement('td');
 
-        trNode.className = (neg) ? 'neg' : (pos) ? 'pos' : 'nil'
+        trNode.className = (neg) ? 'neg' : (pos) ? 'pos' : 'nil';
 
-        tdNode1.innerHTML = ((pos) ? '+' : '') + percentages[i] + '%'
-        tdNode2.innerHTML = formatPPSField(percentages[i], pricePerShareValue)
-        tdNode2.title = ((pos) ? '+' : '') + (formatPPSField(percentages[i], pricePerShareValue) - pricePerShareValue).toFixed(precision)
-        tdNode3.innerHTML = formatGainField(percentages[i], pricePerShareValue)
-        tdNode4.innerHTML = formatEarningsField(neg, percentages[i], pricePerShareValue, sharesNumValue)
-        tdNode4.title = formatResultField(neg, percentages[i], pricePerShareValue, sharesNumValue, tradeCostValue)
+        tdNode1.innerHTML = ((pos) ? '+' : '') + percentages[i] + '%';
+        tdNode2.innerHTML = formatPPSField(percentages[i], pricePerShareValue);
+        tdNode2.title = ((pos) ? '+' : '') + (formatPPSField(percentages[i], pricePerShareValue) - pricePerShareValue).toFixed(precision);
+        tdNode3.innerHTML = formatGainField(percentages[i], pricePerShareValue);
+        tdNode4.innerHTML = formatEarningsField(neg, percentages[i], pricePerShareValue, sharesNumValue);
+        tdNode4.title = formatResultField(neg, percentages[i], pricePerShareValue, sharesNumValue, tradeCostValue);
 
-        trNode.appendChild(tdNode1)
-        trNode.appendChild(tdNode2)
-        trNode.appendChild(tdNode3)
-        trNode.appendChild(tdNode4)
+        trNode.appendChild(tdNode1);
+        trNode.appendChild(tdNode2);
+        trNode.appendChild(tdNode3);
+        trNode.appendChild(tdNode4);
 
-        frag.appendChild(trNode)
+        frag.appendChild(trNode);
     }
 
-    DOMcurrSpread.appendChild(frag)
+    DOMcurrSpread.appendChild(frag);
 
-    if (!noScroll)
-        scrollToBottom(DOMcurrSpread.parentNode.parentNode)
+    if (!noScroll) {
+        scrollToBottom(DOMcurrSpread.parentNode.parentNode);
+    }
 
-    document.title = '$' + pricePerShareValue.toFixed(precision)
+    document.title = '$' + pricePerShareValue.toFixed(precision);
 }
 
 /*
 function updatePrecision() {
-    var pricePerShareValue = DOMpricePerShare.value
+    var pricePerShareValue = DOMpricePerShare.value;
 
-    precision = pricePerShareValue.split('.')[1].length
+    precision = pricePerShareValue.split('.')[1].length;
 
     DOMpricePerShare.setAttribute('step', 1 / Math.pow(10, precision));
 }
 */
 
 function newPricePerShare() {
-    var pricePerShareValue = +DOMpricePerShare.value
-    var tradeCostValue = +DOMtradeCost.value
+    var pricePerShareValue = +DOMpricePerShare.value;
+    var tradeCostValue = +DOMtradeCost.value;
 
-    // updatePrecision()
+    // updatePrecision();
 
-    DOMsharesNum.value = Math.floor(tradeCostValue / pricePerShareValue)
+    DOMsharesNum.value = Math.floor(tradeCostValue / pricePerShareValue);
 
-    update()
+    update();
 }
 
 function newPositionSize() {
-    var pricePerShareValue = +DOMpricePerShare.value
-    var sharesNumValue = +DOMsharesNum.value
+    var pricePerShareValue = +DOMpricePerShare.value;
+    var sharesNumValue = +DOMsharesNum.value;
 
-    DOMtradeCost.value = Math.floor(pricePerShareValue * sharesNumValue)
+    DOMtradeCost.value = Math.floor(pricePerShareValue * sharesNumValue);
 
-    update()
+    update();
 }
 
 function newAmountOfShares() {
-    var pricePerShareValue = +DOMpricePerShare.value
-    var tradeCostValue = +DOMtradeCost.value
+    var pricePerShareValue = +DOMpricePerShare.value;
+    var tradeCostValue = +DOMtradeCost.value;
 
-    DOMsharesNum.value = Math.floor(tradeCostValue / pricePerShareValue)
+    DOMsharesNum.value = Math.floor(tradeCostValue / pricePerShareValue);
 
-    update()
+    update();
 }
 
-var percentages = range(-55, 5, 555).reverse()
+var percentages = range(-55, 5, 555).reverse();
 
-var DOMpricePerShare = document.getElementById('pricePerShare')
-var DOMsharesNum = document.getElementById('sharesNum')
-var DOMtradeCost = document.getElementById('tradeCost')
-var DOMcurrSpread = document.getElementsByTagName('tbody')[0]
+var DOMpricePerShare = document.getElementById('pricePerShare');
+var DOMsharesNum = document.getElementById('sharesNum');
+var DOMtradeCost = document.getElementById('tradeCost');
+var DOMcurrSpread = document.getElementsByTagName('tbody')[0];
 
-DOMpricePerShare.addEventListener('input', newPricePerShare)
-DOMsharesNum.addEventListener('input', newPositionSize)
-DOMtradeCost.addEventListener('input', newAmountOfShares)
-
+DOMpricePerShare.addEventListener('input', newPricePerShare);
+DOMsharesNum.addEventListener('input', newPositionSize);
+DOMtradeCost.addEventListener('input', newAmountOfShares);
 
 DOMpricePerShare.addEventListener('mouseover', function () {
-    this.select()
+    this.select();
 })
 DOMsharesNum.addEventListener('mouseover', function () {
-    this.select()
+    this.select();
 })
 DOMtradeCost.addEventListener('mouseover', function () {
-    this.select()
+    this.select();
 })
 
 window.addEventListener('resize', function () {
-    scrollToBottom(DOMcurrSpread.parentNode.parentNode)
+    scrollToBottom(DOMcurrSpread.parentNode.parentNode);
 })
 
-newPricePerShare()
+newPricePerShare();
 
 </script>
