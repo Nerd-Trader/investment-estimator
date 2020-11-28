@@ -1,5 +1,6 @@
 <title>E$timator</title>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link href="data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAgNCvABOwZQB11HQAGK9iABmvYgA0w2cA+f3zAGTTpwBs0ZgAS51zAJffiwDW86oAxfB1AAJ4RgBp0WMAe9aVANTywgBVzJwAbtJdAHXYpAB22KQA8/zWAHzMrQBiyo0ASMJ2AKTjlwAJrmkAYsqWAIDPrQAEt3IAQseOAEaaawA/zZcAA247AAZuOwDP8bcACHE7AAlxOwAPwXUAG7dpAGTcsQBTo30ABKpnAGHKhQBZy5oA8PvdAGPOiADy++YAf8+uAIDPrgBhoIYA+v7vANn1lwBZy3cAvOuMAJzghwD+//sACXE8AFPIkgDL8msAB3lCABfDcwDF7p4Ae9CyAITYlAB/z68A5vm+AANtOgBo0aQAYtaqAGLOXQABdUAAGbZoAL3shwAVw3QActekAHPXpAB81ZUA4/mbAGDNkACC2JUACqxmAFbUpQBr0H4AedW5AGLNmQAxvmUAFK5jADDCaAAcsWMAHbFjAAhwOwCB2WwAQcNiALfooABJ0Z0AA3hBAHnVjQA6lF0Awu6FAEnGYgCr5ncAAVktACm7ZgBv02QADqtkAJDdgQCh42YAb9KXAFnGfQBp1KYAQMNjAEHDYwD///4AsepOABbDdgA+xn4AJL9qAHzOrwDi+KwAfc6vAH7OrwAtjlYAMMJqADTAZADi980AN8BkABmwYgA4wGQAUceBAE/HigD9/vwA////AC/JiAAitGUAcNakAPH80wCJ2noAxe2WAHHTXQCA15UAD35DAPf96AD4/egAkNyJAOf5uQD5/usAE7VpAGDNXgAGbzsAFblsAP3/9wABd0EAAndBAEDDZQBt1qUAddSWAO770QDj+ZYAhNmBACa6ZgCm5IYABqtnAPD74wCN3HgAEa1kAAyyagCo5KEAAms5AAm/dgBKypUAPsJjAAOjYgBt1qYAu+ukAG3SXAC966QAdtijAAeqZQAmumcAQZhkAD7FhwA2y5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABnqUSWXCUmJjo6XCMiDgAASK2zalgEgFpbWwWmGx4AAJkrp0m0V4GsXnB/oZeqAACao5S0a6+VsKKxXXF2JwAAYVIofUekbGSFOQdpWUsAAD0CaGUTSkN4kDyFawY+AACOh5uMZnMWn3KFjw98dAAAexkDLoWYT4kNP6U2dYYAAGNuGoU1NJKei4pUgra3AAC1LAuEk3IMNzCgL4MfIQAAIBhiX34kOJERqFA7q2AAAAocbU5RQY0QnQlWLRJTAAAqRa5NFbIUTIicbwhGKQAAMxd6Mh0dMQExQnl3QFUAAAAAAAAAAAAAAAAAAAAAAP//AACAAQAAgAEAAIABAACAAQAAgAEAAIABAACAAQAAgAEAAIABAACAAQAAgAEAAIABAACAAQAAgAEAAP//AAA=" rel="icon" type="image/x-icon" />
 
 <style>
@@ -19,7 +20,7 @@ body {
     width: 100%;
     height: 100%;
 
-    /* Purpose: disable text selection on everything */
+    /* Purpose: disable text selection */
     cursor: default;
     user-select: none;
 }
@@ -78,15 +79,16 @@ footer {
     flex-direction: column;
     flex-grow: 1;
     justify-content: center;
-    max-width: 22.5%;
+    max-width: 33%;
     overflow: hidden;
     padding: 18px;
-    width: 22.5%;
+    position: relative;
+    width: 33%;
 }
 
 label {
     display: block;
-    font-size: 1.3rem;
+    font-size: 0.8rem;
     white-space: nowrap;
     text-transform: uppercase;
 }
@@ -100,20 +102,21 @@ input {
     margin-bottom: .52em;
     width: 100%;
     padding: 0px 4px;
+    min-width: 100px;
 }
 
 a {
     display: block;
-    width: 100px;
-    height: 100px;
+    height: 30vh;
     position: absolute;
     bottom: 18px;
     right: 18px;
-    background-color: #bbb;
+    left: 18px;
+    background-color: #ccc;
     border-radius: 8px;
     text-decoration: none;
     text-align: center;
-    line-height: 100px;
+    line-height: 30vh;
     color: #000;
     font-size: 200%;
 }
