@@ -162,7 +162,7 @@ a {
     <label for="tradeCost">Cost of trade</label>
     <input id="tradeCost" type="number" min="0" max="90000" step="100" placeholder="total cost" value="2000" />
 
-    <a href="javascript:scrollToBottom()">⍗</a>
+    <a id="scrollToBottom" href="javascript:scrollToBottom()" style="display: none;">⍗</a>
 </footer>
 
 <script>
@@ -194,6 +194,23 @@ const priceFormatters = [
     }),
 ];
 
+function buffer(func, wait, scope) {
+    var timer = null;
+
+    return function() {
+        if (timer) {
+            clearTimeout(timer);
+        }
+
+        var args = arguments;
+
+        timer = setTimeout(function() {
+            timer = null;
+            func.apply(scope, args);
+        }, wait);
+    };
+}
+
 function range(start, end, step) {
     var a = [start];
 
@@ -209,12 +226,19 @@ function range(start, end, step) {
 }
 
 function empty(DOMelement) {
-    while (DOMelement.firstChild) DOMelement.removeChild(DOMelement.firstChild);
+    while (DOMelement.firstChild) {
+        DOMelement.removeChild(DOMelement.firstChild);
+    }
 }
 
 function scrollToBottom() {
+    var DOMmainViewport = DOMcurrSpread.parentNode.parentNode;
+    DOMmainViewport.scrollTop = DOMmainViewport.scrollHeight - DOMmainViewport.clientHeight;
+}
+
+function isScrolledAllTheWayToBottom() {
     var element = DOMcurrSpread.parentNode.parentNode;
-    element.scrollTop = element.scrollHeight - element.clientHeight;
+    return element.scrollTop >= element.scrollHeight - element.clientHeight - 2;
 }
 
 function calculatePriceBasedOnPercentage(percentage, pricePerShareValue) {
@@ -359,6 +383,8 @@ var DOMpricePerShare = document.getElementById('pricePerShare');
 var DOMsharesNum = document.getElementById('sharesNum');
 var DOMtradeCost = document.getElementById('tradeCost');
 var DOMcurrSpread = document.getElementsByTagName('tbody')[0];
+var DOMmainViewport = DOMcurrSpread.parentNode.parentNode;
+var DOMscrollToBottom = document.getElementById('scrollToBottom');
 
 DOMpricePerShare.addEventListener('input', newPricePerShare);
 DOMsharesNum.addEventListener('input', newPositionSize);
@@ -373,6 +399,15 @@ DOMsharesNum.addEventListener('mouseover', function () {
 DOMtradeCost.addEventListener('mouseover', function () {
     this.select();
 });
+
+function mainViewportScrollHandler () {
+    if (isScrolledAllTheWayToBottom()) {
+        DOMscrollToBottom.style.display = 'none';
+    } else {
+        DOMscrollToBottom.style.display = 'block';
+    }
+};
+DOMmainViewport.addEventListener('scroll', buffer(mainViewportScrollHandler, 50));
 
 // window.addEventListener('resize', scrollToBottom);
 
